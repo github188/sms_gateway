@@ -1,0 +1,116 @@
+syntax = "proto2";
+package gatewaymsg;
+
+// 所有请求报文都时奇数，所有应答报文都是偶数
+// 请求协议定义以Req结尾
+// 回应协议定义以Rsp结尾
+
+//////////////////////////////////////////////////////////////////////
+// 心跳类
+//////////////////////////////////////////////////////////////////////
+// 心跳请求 0x00010001
+message HeartBeatReq{
+  required string SID = 1; //报文唯一标识
+}
+// 心跳回应 0x00010002
+message HeartBeatRsp{
+  required string SID = 1;
+}
+
+//////////////////////////////////////////////////////////////////////
+// 注册类
+//////////////////////////////////////////////////////////////////////
+// 服务注册请求 0x00010003
+message SvrRegReq{
+  required string SID = 1;
+  required string ProtocolType = 2; //http; cmpp2; cmpp3; smgp; sgip
+  required string ChannelId = 3;  //通道ID
+}
+
+// 服务注册响应 0x00010004
+message SvrRegRsp{
+  required string SID = 1;
+  required int32 RetCode = 2; //0 成功; 其他失败
+}
+
+//////////////////////////////////////////////////////////////////////
+// 管理平台与网关管理模块交互
+//////////////////////////////////////////////////////////////////////
+
+// 通道管理请求 0x00020001
+message ChannelMgrReq{
+  required string SID = 1;
+  required int32 MgrType = 2; //0 启用通道; 1 修改通道参数; 2 禁用通道
+  required string ChannelId = 3; //通道ID
+}
+
+// 通道管理应答 0x00020002
+message ChannelMgrRsp{
+  required string SID = 1;
+  required int32 RetCode = 2; //0 成功; 其他失败
+}
+
+//////////////////////////////////////////////////////////////////////
+// 网关管理模块与网关协议模块交互
+//////////////////////////////////////////////////////////////////////
+
+//通道参数变更请求 0x00020003
+message ChannelUpdateReq{
+  required string SID = 1;
+  required string ProtocolType = 2; //http; cmpp2; cmpp3; smgp; sgip
+  required string ChannelId = 3; //通道ID
+}
+
+//通道参数变更应答 0x00020004
+message ChannelUpdateRsp{
+  required string SID = 1;
+  required int32 RetCode = 2; //0 成功; 其他失败
+}
+
+//////////////////////////////////////////////////////////////////////
+// 网关统一接入与网关协议模块交互
+//////////////////////////////////////////////////////////////////////
+
+//信息发送请求 0x00020005
+message GateWayMsgSendReq{
+  required string SID = 1;
+  required string SrcPhone = 2;             // 接入号
+  required string MessageContent = 3;       // 短信内容
+  required int32  ChannelType = 4;          // 通道类型
+  required string ChannelId = 5;            // 通道ID
+  required string ChannelGroupId = 6;       // 通道组ID
+  required string DateTime = 7;             // 发送日期
+  required string SubmitId = 8;             // 子批次号
+  required string Batchno = 9;              // 批次号
+  required string OperatorId = 10;          // 操作员ID
+  required string CustomerId = 11;          // 客户ID
+  required string AccountId = 12;           // 账号ID
+  required string CompanyId = 13;           // 公司ID
+  required int32  SubmitWay = 14;           // 提交方式
+  required int32  IsOtoSend = 15;           // 是否一对一短信
+  required int32  IsSmsResend = 16;         // 是否重发短信
+  required int32  ReturnType = 17;          // 返量类型    (0:默认 1:驳回返  2:驳回不返)
+  required string SmsData = 18;             // SMS数据（透传）
+
+  message PhoneListGroup
+  {
+        optional string SendId = 1;         //发送ID
+        optional int32  IsNeedSend = 2;     //是否实发
+        optional string VirtualStatus = 3;  //虚拟状态
+        optional string ConvertStatus = 4;  //转换状态
+        optional string MobilePhone = 5;    //手机号码
+        optional string SmsContent = 6;     //一对一短信内容
+        optional string MobileCity = 7;     //手机号码所属城市
+  }
+  repeated PhoneListGroup PhoneList = 19;
+}
+
+//信息发送应答 0x00020006
+message GateWayMsgSendRsp{
+  required string SID = 1;
+  required int32 RetCode = 2; //0 成功; 其他失败
+}
+
+//////////////////////////////////////////////////////////////////////
+// 结束
+//////////////////////////////////////////////////////////////////////
