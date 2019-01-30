@@ -312,7 +312,18 @@ int SgipBiz::send_msg_req(dict* wq,
     bodySubmit.UserCount = cnt;
 
     strncpy(bodySubmit.CorpId,m_channel->sSpId.c_str(),sizeof(bodySubmit.CorpId));
-    strncpy(bodySubmit.ServiceType,m_channel->sServiceId.c_str(),sizeof(bodySubmit.ServiceType));
+
+    //20190125新增加需求
+    if( packet->sServiceId.length() > 0 )
+    {
+        //使用上游模块传来的业务代码
+        strncpy(bodySubmit.ServiceType, packet->sServiceId.c_str(), sizeof(bodySubmit.ServiceType));
+    }
+    else
+    {
+        //使用配置的默认业务代码
+        strncpy(bodySubmit.ServiceType, m_channel->sServiceId.c_str(), sizeof(bodySubmit.ServiceType));
+    }
     bodySubmit.FeeType = 0x04;
     bodySubmit.AgentFlag = 0x00;
     bodySubmit.MorelatetoMTFlag = 0x02;

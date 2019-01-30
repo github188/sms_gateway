@@ -79,7 +79,7 @@ message GateWayMsgSendReq{
   required int32  IsSmsResend = 16;         // 是否重发短信
   required int32  ReturnType = 17;          // 返量类型    (0:默认 1:驳回返  2:驳回不返)
   required string SmsData = 18;             // SMS数据（透传）
-
+  required string ServiceId = 19;           // 业务代码 20190125
   message PhoneListGroup
   {
         optional string SendId = 1;         //发送ID
@@ -90,7 +90,8 @@ message GateWayMsgSendReq{
         optional string SmsContent = 6;     //一对一短信内容
         optional string MobileCity = 7;     //手机号码所属城市
   }
-  repeated PhoneListGroup PhoneList = 19;
+  repeated PhoneListGroup PhoneList = 20;
+  
 }
 
 //信息发送应答 0x00020006

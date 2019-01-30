@@ -235,6 +235,7 @@ int save_msg( GateWayMsgSendReq *req )
     jsonRoot["channel_type"] = Json::Value(req->channeltype());
     jsonRoot["channel_id"] = Json::Value(req->channelid());
     jsonRoot["channel_groupid"] = Json::Value(req->channelgroupid());
+    jsonRoot["service_id"] = Json::Value(req->serviceid());
     // 拼装sms_argument
     jsonArgument["datetime"] = Json::Value(req->datetime());
     jsonArgument["submit_id"] = Json::Value(req->submitid());

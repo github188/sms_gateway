@@ -251,7 +251,18 @@ int SmgpBiz::send_msg_req(dict* wq,
 
     bodySubmit.MsgType = 0x06;
     bodySubmit.Priority = 0x01;
-    strncpy(bodySubmit.ServiceId,m_channel->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+
+    //20190125新增加需求
+    if( packet->sServiceId.length() > 0 )
+    {
+        //使用上游模块传来的业务代码
+        strncpy(bodySubmit.ServiceId, packet->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+    }
+    else
+    {
+        //使用配置的默认业务代码
+        strncpy(bodySubmit.ServiceId, m_channel->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+    }
     strncpy(bodySubmit.FeeType, "00", sizeof(bodySubmit.FeeType));
     strncpy(bodySubmit.FeeCode, "0", sizeof(bodySubmit.FeeCode));
     strncpy(bodySubmit.FixedFee, "0", sizeof(bodySubmit.FixedFee));

@@ -128,6 +128,7 @@ typedef struct message_packet_s
     uint32_t uChannelType;                                  // 通道类型
     std::string sChannelId;                                 // 通道ID
     std::string sChannelGroupId;                            // 通道组ID
+    std::string sServiceId;                                 // 业务代码(20190125增加的需求，不同扩展码业务代码也不一样)
     sms_argument_t smsArgument;                             // 短信发送参数
     std::map<std::string, sms_attribute_t> mPhoneList;      // 目标号码对应的属性集合
 }message_packet_t;
@@ -136,7 +137,7 @@ class BIZAPI IChannelBiz
 {
 public:
     IChannelBiz() : m_channel(NULL),
-                    m_sendcheck(0),
+                    m_sendcheck(1),
                     m_microseconds(0)
     {
 
@@ -257,10 +258,10 @@ public:
         }
 
         //初始化时记录一个时间点
-        if( m_sendcheck == 0 )
+        if( m_sendcheck > 0 )
         {
             m_microseconds = get_utc_microseconds();
-            m_sendcheck = 1;
+            m_sendcheck--;
         }
         else
         {
@@ -273,6 +274,7 @@ public:
             }
             else
             {
+                m_sendcheck = interval / m_channel->uSendSpeed;
                 m_microseconds = now;
             }
         }

@@ -261,8 +261,18 @@ int Cmpp2Biz::send_msg_req(dict* wq,
     bodySubmit.TPPId = 0x0;
     // 企业代码
     strncpy(bodySubmit.MsgSrc, m_channel->sSpId.c_str(),sizeof(bodySubmit.MsgSrc));
-    //业务代码
-    strncpy(bodySubmit.ServiceId, m_channel->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+
+    //20190125新增加需求
+    if( packet->sServiceId.length() > 0 )
+    {
+        //使用上游模块传来的业务代码
+        strncpy(bodySubmit.ServiceId, packet->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+    }
+    else
+    {
+        //使用配置的默认业务代码
+        strncpy(bodySubmit.ServiceId, m_channel->sServiceId.c_str(), sizeof(bodySubmit.ServiceId));
+    }
     // 资费类别
     strncpy(bodySubmit.FeeType, m_channel->sFeeType.c_str(),sizeof(bodySubmit.FeeType));
     // 资费代码

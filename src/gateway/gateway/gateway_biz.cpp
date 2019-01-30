@@ -349,6 +349,7 @@ int handle_gateway_msg_send_req(message_head_t* hdr, const char* data, int len, 
                         req.sid().c_str(),
                         req.channelid().c_str());
 
+    //将消息写入消息队列
     int ret = msg_send(hdr,&req);
     if( ret != 0 )
     {
@@ -379,6 +380,7 @@ int msg_to_json( GateWayMsgSendReq *req,string &msg_json )
     jsonRoot["channel_type"] = Json::Value(req->channeltype());
     jsonRoot["channel_id"] = Json::Value(req->channelid());
     jsonRoot["channel_groupid"] = Json::Value(req->channelgroupid());
+    jsonRoot["service_id"] = Json::Value(req->serviceid());
     // 拼装sms_argument
     jsonArgument["datetime"] = Json::Value(req->datetime());
     jsonArgument["submit_id"] = Json::Value(req->submitid());
@@ -479,6 +481,7 @@ int msg_send(message_head_t* hdr,GateWayMsgSendReq *req)
     send_req.set_channeltype(req->channeltype());
     send_req.set_channelid(req->channelid());
     send_req.set_channelgroupid(req->channelgroupid());
+    send_req.set_serviceid(req->serviceid());
     send_req.set_datetime(req->datetime());
     send_req.set_submitid(req->submitid());
     send_req.set_batchno(req->batchno());
@@ -674,6 +677,15 @@ int json_to_msg(string msg_json,GateWayMsgSendReq *req,map<string,sms_attribute_
             return -1;
         }
         req->set_channelgroupid(jsonValue.asString());
+
+        // 业务代码
+        jsonValue = jsonRoot["service_id"];
+        if (jsonValue.isNull() || !jsonValue.isString())
+        {
+            LOG_ERROR("service_id property is not exist.\n");
+            return -1;
+        }
+        req->set_serviceid(jsonValue.asString());
 
         // sms_argument
         Json::Value jsonArgument = jsonRoot["sms_argument"];

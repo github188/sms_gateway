@@ -18,6 +18,7 @@ bool parse_message(const char *buf,int data_len,message_packet_t *msgPacket)
     msgPacket->uChannelType = req.channeltype();
     msgPacket->sChannelId = req.channelid();
     msgPacket->sChannelGroupId = req.channelgroupid();
+    msgPacket->sServiceId = req.serviceid();
     msgPacket->smsArgument.sDateTime = req.datetime();
     msgPacket->smsArgument.sSubmitId = req.submitid();
     msgPacket->smsArgument.sBatchno = req.batchno();
